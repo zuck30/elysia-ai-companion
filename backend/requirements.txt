@@ -1,20 +1,38 @@
+# Web Server
 fastapi==0.109.2
 uvicorn==0.27.1
-setuptools<70
 python-dotenv==1.0.1
 pydantic==2.6.1
+python-multipart==0.0.9
+websockets==12.0
+
+# Database & Networking
+chromadb==0.4.22
 requests==2.31.0
 httpx==0.26.0
-python-multipart==0.0.9
-chromadb==0.4.22
-edge-tts==6.1.10
-tensorflow==2.20.0
-numpy==1.26.4
-opencv-python-headless==4.9.0.80
-fer==22.5.1
-moviepy<2.0.0
+aiohttp==3.9.3
+
+# AI & Machine Learning
+# Version 2.17.0 is stable for Mac Python 3.12
+tensorflow==2.17.0
+# Optimized for Mac M-series GPU acceleration
+tensorflow-metal; sys_platform == 'darwin'
 torch==2.2.0
 transformers==4.37.2
+
+# Vision & Emotion
+# Fixed to avoid the 'moviepy.editor' error
+moviepy==1.0.3
+# FER date-based version
+fer==22.5.1
+opencv-python-headless==4.9.0.80
 pillow==10.2.0
-websockets==12.0
-aiohttp==3.9.3
+
+# Audio
+edge-tts==6.1.10
+
+# Utilities
+numpy==1.26.4
+setuptools<70
+# Critical for FER/TensorFlow compatibility
+protobuf<5.0.0
