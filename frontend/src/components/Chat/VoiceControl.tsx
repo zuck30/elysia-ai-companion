@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface VoiceControlProps {
   onVoiceInput: (audioBlob: Blob) => void;
@@ -41,28 +41,69 @@ const VoiceControl: React.FC<VoiceControlProps> = ({ onVoiceInput, isListening, 
   };
 
   return (
-    <div className="flex items-center space-x-4">
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={isListening ? stopRecording : startRecording}
-        className={`p-4 rounded-full transition-colors ${
-          isListening ? 'bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'bg-purple-600'
-        } text-white`}
-      >
-        {isListening ? <MicOff size={24} /> : <Mic size={24} />}
-      </motion.button>
-      
-      {isSpeaking && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex items-center text-purple-300"
+    <div className="flex flex-col items-center space-y-4">
+      <div className="flex items-center space-x-6">
+        <motion.button
+          whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(139, 92, 246, 0.3)" }}
+          whileTap={{ scale: 0.95 }}
+          onClick={isListening ? stopRecording : startRecording}
+          className={`relative p-5 rounded-3xl transition-all duration-500 ${
+            isListening
+              ? 'bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.4)]'
+              : 'bg-gradient-to-tr from-purple-600 to-indigo-600 shadow-xl'
+          } text-white group`}
         >
-          <Volume2 className="animate-pulse mr-2" />
-          <span className="text-sm font-medium">Elysia is speaking...</span>
-        </motion.div>
-      )}
+          {isListening ? (
+            <MicOff size={28} className="animate-pulse" />
+          ) : (
+            <Mic size={28} className="group-hover:scale-110 transition-transform" />
+          )}
+          {isListening && (
+            <motion.div
+              layoutId="ripple"
+              className="absolute inset-0 rounded-3xl bg-red-500 -z-10"
+              animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+              transition={{ repeat: Infinity, duration: 1.5 }}
+            />
+          )}
+        </motion.button>
+
+        <div className="flex flex-col">
+          <AnimatePresence mode="wait">
+            {isSpeaking ? (
+              <motion.div
+                key="speaking"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="flex items-center text-purple-300 bg-white/5 px-4 py-2 rounded-2xl border border-white/10"
+              >
+                <div className="flex space-x-1 mr-3">
+                  {[1, 2, 3].map((i) => (
+                    <motion.div
+                      key={i}
+                      animate={{ height: [8, 16, 8] }}
+                      transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.1 }}
+                      className="w-1 bg-purple-400 rounded-full"
+                    />
+                  ))}
+                </div>
+                <span className="text-xs font-semibold uppercase tracking-widest">Elysia is speaking</span>
+              </motion.div>
+            ) : isListening ? (
+              <motion.div
+                key="listening"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="flex items-center text-red-400 bg-white/5 px-4 py-2 rounded-2xl border border-white/10"
+              >
+                <span className="text-xs font-semibold uppercase tracking-widest animate-pulse">Listening...</span>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 };

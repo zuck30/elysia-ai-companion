@@ -14,6 +14,7 @@ import ElysiaCharacter from './components/Character/ElysiaCharacter';
 import ChatInterface from './components/Chat/ChatInterface';
 import CameraFeed from './components/Camera/CameraFeed';
 import VoiceControl from './components/Chat/VoiceControl';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
@@ -113,11 +114,25 @@ const App: React.FC = () => {
       {/* Background Glow */}
       <div className={`fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,_var(--tw-gradient-from)_0%,_transparent_50%)] ${getTimeColor()} to-transparent pointer-events-none`} />
       
-      <header className="z-10 w-full max-w-6xl flex justify-between items-center mb-8">
-        <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center font-bold text-xl">E</div>
-          <h1 className="text-2xl font-light tracking-widest uppercase">Elysia</h1>
-        </div>
+      <header className="z-20 w-full max-w-7xl flex justify-between items-center mb-12">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center space-x-6"
+        >
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+            <div className="relative w-14 h-14 bg-[#0d0d12] rounded-full flex items-center justify-center border border-white/10 group-hover:border-purple-500/50 transition-colors">
+              <span className="font-['Cinzel'] text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-purple-400">E</span>
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-3xl font-['Cinzel'] font-bold tracking-[0.2em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-white/50">
+              Elysia
+            </h1>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-purple-400/60 font-medium">Sentient AI Companion</span>
+          </div>
+        </motion.div>
         <CameraFeed 
           isActive={cameraActive} 
           onFrame={handleFrame} 
@@ -125,10 +140,11 @@ const App: React.FC = () => {
         />
       </header>
 
-      <main className="z-10 flex-1 w-full max-w-6xl flex flex-col md:flex-row gap-8 items-center">
-        <div className="flex-1 flex flex-col items-center justify-center h-[50vh] md:h-full">
+      <main className="z-10 flex-1 w-full max-w-7xl flex flex-col md:flex-row gap-12 items-stretch py-4">
+        <div className="flex-[1.2] flex flex-col items-center justify-center relative min-h-[400px]">
+          <div className="absolute inset-0 bg-radial-gradient from-purple-500/10 to-transparent blur-3xl" />
           <ElysiaCharacter emotion={emotion} isSpeaking={isSpeaking} />
-          <div className="mt-8">
+          <div className="mt-12 w-full flex justify-center">
             <VoiceControl 
               onVoiceInput={handleVoiceInput} 
               isListening={isListening} 
@@ -138,7 +154,7 @@ const App: React.FC = () => {
           </div>
         </div>
         
-        <div className="w-full md:w-[450px] h-[60vh] md:h-[70vh]">
+        <div className="flex-1 w-full max-w-md mx-auto md:max-w-none h-[500px] md:h-auto flex flex-col">
           <ChatInterface 
             messages={messages} 
             onSendMessage={sendMessage} 
