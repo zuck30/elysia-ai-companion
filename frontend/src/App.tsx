@@ -14,7 +14,8 @@ import ElysiaCharacter from './components/Character/ElysiaCharacter';
 import ChatInterface from './components/Chat/ChatInterface';
 import CameraFeed from './components/Camera/CameraFeed';
 import VoiceControl from './components/Chat/VoiceControl';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Settings, Info, History, Sparkles } from 'lucide-react';
 import axios from 'axios';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
@@ -110,11 +111,12 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white flex flex-col items-center p-8 overflow-hidden">
-      {/* Background Glow */}
-      <div className={`fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,_var(--tw-gradient-from)_0%,_transparent_50%)] ${getTimeColor()} to-transparent pointer-events-none`} />
+    <div className="min-h-screen bg-[#050508] text-zinc-100 flex flex-col items-center p-6 md:p-10 selection:bg-purple-500/30">
+      {/* Cinematic Effects */}
+      <div className="noise" />
+      <div className={`fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,_var(--tw-gradient-from)_0%,_transparent_100%)] ${getTimeColor()} to-transparent opacity-40 pointer-events-none transition-colors duration-1000`} />
       
-      <header className="z-20 w-full max-w-7xl flex justify-between items-center mb-12">
+      <header className="z-20 w-full max-w-7xl flex justify-between items-start mb-10">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -127,24 +129,42 @@ const App: React.FC = () => {
             </div>
           </div>
           <div className="flex flex-col">
-            <h1 className="text-3xl font-['Cinzel'] font-bold tracking-[0.2em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-white/50">
+            <h1 className="text-4xl font-['Cinzel'] font-bold tracking-[0.25em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-100 to-zinc-500">
               Elysia
             </h1>
-            <span className="text-[10px] uppercase tracking-[0.4em] text-purple-400/60 font-medium">Sentient AI Companion</span>
+            <div className="flex items-center space-x-2">
+              <span className="text-[9px] uppercase tracking-[0.5em] text-zinc-500 font-bold">Protocol v2.4.0</span>
+              <div className="w-1 h-1 rounded-full bg-purple-500/50" />
+              <span className="text-[9px] uppercase tracking-[0.5em] text-purple-400/80 font-bold">Neural Link Stable</span>
+            </div>
           </div>
         </motion.div>
-        <CameraFeed 
-          isActive={cameraActive} 
-          onFrame={handleFrame} 
-          toggleCamera={() => dispatch(setCameraActive(!cameraActive))} 
-        />
+        <div className="flex items-center space-x-4">
+          <CameraFeed
+            isActive={cameraActive}
+            onFrame={handleFrame}
+            toggleCamera={() => dispatch(setCameraActive(!cameraActive))}
+          />
+          <div className="flex space-x-1">
+            <button className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 transition-all">
+              <History size={20} className="text-zinc-400" />
+            </button>
+            <button className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 transition-all">
+              <Settings size={20} className="text-zinc-400" />
+            </button>
+          </div>
+        </div>
       </header>
 
-      <main className="z-10 flex-1 w-full max-w-7xl flex flex-col md:flex-row gap-12 items-stretch py-4">
-        <div className="flex-[1.2] flex flex-col items-center justify-center relative min-h-[400px]">
-          <div className="absolute inset-0 bg-radial-gradient from-purple-500/10 to-transparent blur-3xl" />
+      <main className="z-10 flex-1 w-full max-w-7xl flex flex-col lg:flex-row gap-16 items-center lg:items-stretch">
+        <div className="flex-[1.2] flex flex-col items-center justify-center relative min-h-[450px] w-full">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(139,92,246,0.08)_0%,_transparent_70%)] blur-3xl"
+          />
           <ElysiaCharacter emotion={emotion} isSpeaking={isSpeaking} />
-          <div className="mt-12 w-full flex justify-center">
+          <div className="mt-20 w-full max-w-md">
             <VoiceControl 
               onVoiceInput={handleVoiceInput} 
               isListening={isListening} 

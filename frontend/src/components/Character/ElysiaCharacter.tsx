@@ -17,34 +17,44 @@ const emotionStyles: Record<string, any> = {
 
 const ElysiaCharacter: React.FC<ElysiaCharacterProps> = ({ emotion, isSpeaking }) => {
   const style = emotionStyles[emotion] || emotionStyles.neutral;
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20,
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
-      {/* Background Aura */}
+    <div className="relative w-full h-full flex items-center justify-center perspective-1000">
+      {/* Deep Background Glow */}
       <motion.div
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.2, 0.4, 0.2],
+          scale: [1, 1.3, 1],
+          opacity: [0.1, 0.3, 0.1],
         }}
         transition={{
-          duration: 4,
+          duration: 8,
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute w-64 h-64 rounded-full blur-[80px]"
+        className="absolute w-96 h-96 rounded-full blur-[120px]"
         style={{ backgroundColor: style.color }}
       />
 
       <motion.div
         animate={{
-          y: [0, -15, 0],
-          rotate: [0, 2, -2, 0],
+          x: mousePos.x,
+          y: mousePos.y + (isSpeaking ? -10 : 0),
+          rotateX: -mousePos.y * 0.5,
+          rotateY: mousePos.x * 0.5,
         }}
-        transition={{
-          duration: 6,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
+        transition={{ type: 'spring', stiffness: 50, damping: 20 }}
         className="relative z-10"
       >
         {/* Abstract Fluid Core */}
@@ -100,16 +110,21 @@ const ElysiaCharacter: React.FC<ElysiaCharacterProps> = ({ emotion, isSpeaking }
               cx="100" cy="100" r="35"
               fill="url(#coreGradient)"
               animate={{
-                r: isSpeaking ? [35, 40, 35] : 35,
+                r: isSpeaking ? [35, 42, 35] : 35,
+                fill: style.color,
               }}
-              transition={{ duration: 0.4, repeat: isSpeaking ? Infinity : 0 }}
+              transition={{
+                r: { duration: 0.3, repeat: isSpeaking ? Infinity : 0 },
+                fill: { duration: 2 }
+              }}
             />
           </g>
           
           {/* Eyes/Points of Light - More Soulful */}
           <motion.g
             animate={{
-              y: isSpeaking ? -2 : 0
+              y: isSpeaking ? -4 : 0,
+              x: mousePos.x * 0.2,
             }}
           >
             <motion.circle
