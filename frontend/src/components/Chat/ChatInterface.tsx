@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Mic, MicOff } from 'lucide-react';
+import { Send, Sparkles, User, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Message {
@@ -32,56 +32,80 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMessage, 
   };
 
   return (
-    <div className="flex flex-col h-full max-w-2xl mx-auto w-full bg-white/[0.03] backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl overflow-hidden">
+    <div className="flex flex-col h-full max-w-2xl mx-auto w-full bg-[#0d0d12]/40 backdrop-blur-2xl rounded-[2.5rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
+      <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+        <div className="flex items-center space-x-2">
+          <Sparkles size={16} className="text-purple-400" />
+          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400">Neural Sync Active</span>
+        </div>
+        <div className="flex space-x-1">
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        </div>
+      </div>
+
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-white/10 scroll-smooth"
+        className="flex-1 overflow-y-auto p-6 space-y-8 scrollbar-thin scrollbar-thumb-white/5 scroll-smooth"
       >
-        <AnimatePresence mode='popLayout'>
+        <AnimatePresence mode='popLayout' initial={false}>
           {messages.map((msg, i) => (
             <motion.div
               key={i}
               layout
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} items-end space-x-2`}
             >
+              {msg.role === 'elysia' && (
+                <div className="w-8 h-8 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-1">
+                  <Zap size={14} className="text-purple-400" />
+                </div>
+              )}
               <div 
-                className={`max-w-[85%] px-4 py-3 rounded-2xl shadow-lg ${
+                className={`max-w-[80%] px-5 py-3.5 rounded-[1.5rem] shadow-2xl relative group ${
                   msg.role === 'user' 
-                    ? 'bg-gradient-to-br from-purple-600 to-indigo-700 text-white rounded-tr-none'
-                    : 'bg-white/5 text-purple-50 backdrop-blur-sm rounded-tl-none border border-white/10'
+                    ? 'bg-zinc-100 text-zinc-900 rounded-br-none font-medium'
+                    : 'bg-white/5 text-zinc-100 backdrop-blur-md rounded-bl-none border border-white/10 font-light'
                 }`}
               >
-                <p className="text-[15px] leading-relaxed tracking-wide font-light">
+                <p className="text-[15px] leading-relaxed tracking-tight">
                   {msg.content}
                 </p>
+                <div className={`absolute bottom-0 ${msg.role === 'user' ? '-right-1 border-l-8 border-l-zinc-100' : '-left-1 border-r-8 border-r-white/5'} border-t-8 border-t-transparent h-0 w-0`} />
               </div>
+              {msg.role === 'user' && (
+                <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-1">
+                  <User size={14} className="text-zinc-500" />
+                </div>
+              )}
             </motion.div>
           ))}
           {isTyping && (
             <motion.div
               layout
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex justify-start"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex justify-start items-center space-x-2"
             >
-              <div className="bg-white/5 px-4 py-4 rounded-2xl rounded-tl-none border border-white/10 backdrop-blur-sm">
+              <div className="w-8 h-8 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                <Zap size={14} className="text-purple-400" />
+              </div>
+              <div className="bg-white/5 px-5 py-4 rounded-[1.5rem] rounded-tl-none border border-white/10 backdrop-blur-md">
                 <div className="flex space-x-1.5">
                   <motion.div
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                    transition={{ repeat: Infinity, duration: 1 }}
+                    animate={{ opacity: [0.3, 1, 0.3] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
                     className="w-1.5 h-1.5 bg-purple-400 rounded-full"
                   />
                   <motion.div
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                    transition={{ repeat: Infinity, duration: 1, delay: 0.2 }}
+                    animate={{ opacity: [0.3, 1, 0.3] }}
+                    transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }}
                     className="w-1.5 h-1.5 bg-purple-400 rounded-full"
                   />
                   <motion.div
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-                    transition={{ repeat: Infinity, duration: 1, delay: 0.4 }}
+                    animate={{ opacity: [0.3, 1, 0.3] }}
+                    transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }}
                     className="w-1.5 h-1.5 bg-purple-400 rounded-full"
                   />
                 </div>
@@ -91,25 +115,33 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMessage, 
         </AnimatePresence>
       </div>
       
-      <form onSubmit={handleSubmit} className="p-4 bg-white/[0.02] border-t border-white/10 flex items-center space-x-3">
-        <div className="relative flex-1">
+      <div className="p-6 bg-white/[0.02] border-t border-white/5">
+        <form onSubmit={handleSubmit} className="relative group">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Whisper something to Elysia..."
-            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all duration-300"
+            placeholder="Type your message..."
+            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-6 pr-14 py-4 text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500/30 transition-all duration-500"
           />
+          <motion.button
+            whileHover={{ scale: 1.05, x: -2 }}
+            whileTap={{ scale: 0.95 }}
+            type="submit"
+            disabled={!input.trim()}
+            className="absolute right-2 top-2 bottom-2 px-4 bg-zinc-100 hover:bg-white disabled:bg-zinc-800 disabled:text-zinc-600 text-zinc-900 rounded-xl transition-all flex items-center justify-center shadow-lg"
+          >
+            <Send size={18} />
+          </motion.button>
+        </form>
+        <div className="mt-4 flex justify-between items-center">
+          <p className="text-[10px] text-zinc-600 uppercase tracking-widest font-bold">End-to-End Encryption</p>
+          <div className="flex items-center space-x-2 text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
+            <span>Latency: 24ms</span>
+            <div className="w-1 h-1 rounded-full bg-emerald-500" />
+          </div>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          type="submit"
-          className="p-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-2xl text-white shadow-lg shadow-purple-900/20 transition-all"
-        >
-          <Send size={20} />
-        </motion.button>
-      </form>
+      </div>
     </div>
   );
 };
