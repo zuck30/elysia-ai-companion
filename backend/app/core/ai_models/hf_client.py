@@ -1,28 +1,36 @@
 import os
 import httpx
 import json
+import base64
 from dotenv import load_dotenv
 
 load_dotenv()
 
 HF_API_KEY = os.getenv("HF_API_KEY")
+# Reverted to the Router URL as api-inference is throwing 410 Gone for these models
 HF_API_URL = "https://router.huggingface.co/hf-inference/models/"
 
 class HFClient:
     def __init__(self):
         self.headers = {"Authorization": f"Bearer {HF_API_KEY}"}
-        self.timeout = 30.0
+        self.timeout = 60.0
 
     async def query(self, model_id, payload):
         url = f"{HF_API_URL}{model_id}"
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             response = await client.post(url, headers=self.headers, json=payload)
+            
+            if response.status_code == 503:
+                return {"error": "Model loading"}
+                
             if response.status_code != 200:
-                raise Exception(f"HF API Error: {response.text}")
+                # Log error for visibility in terminal
+                print(f"HF API Error Trace: {response.text}")
+                raise Exception(f"HF API Error: {response.status_code}")
+            
             return response.json()
 
     async def chat_completion(self, messages, model="mistralai/Mistral-7B-Instruct-v0.2"):
-        # Format for Mistral
         prompt = ""
         for msg in messages:
             if msg["role"] == "user":
@@ -32,34 +40,49 @@ class HFClient:
         
         payload = {
             "inputs": prompt,
-            "parameters": {"max_new_tokens": 250, "temperature": 0.7}
+            "parameters": {"max_new_tokens": 250, "temperature": 0.7, "return_full_text": False}
         }
+        
         result = await self.query(model, payload)
+        
+        if isinstance(result, dict) and "error" in result:
+            return "Give me a second, I'm just waking up..."
+
         if isinstance(result, list) and len(result) > 0:
-            return result[0].get("generated_text", "").split("[/INST]")[-1].strip()
+            text = result[0].get("generated_text", "")
+            return text.replace(prompt, "").strip()
         return "I'm sorry, I couldn't generate a response."
 
     async def vision_analysis(self, image_base64, model="vikhyatk/moondream2"):
-        # Moondream2 might need a different format or specific endpoint
-        # For HF Inference API, we usually send base64 data
+        if "," in image_base64:
+            image_base64 = image_base64.split(",")[1]
+
+        # Payload format for Moondream on HF Router
         payload = {
             "inputs": {
                 "image": image_base64,
-                "question": "What do you see in this image? Describe the person's expression and surroundings briefly."
+                "prompt": "Describe this person and their expression."
             }
         }
+
         result = await self.query(model, payload)
+
+        if isinstance(result, dict) and "error" in result:
+            return "I'm still loading my visual sensors."
+
         if isinstance(result, list) and len(result) > 0:
             return result[0].get("generated_text", "")
-        return "I'm unable to see clearly right now."
+        elif isinstance(result, dict):
+            return result.get("generated_text", "")
+            
+        return "My vision is a bit blurry right now."
 
     async def speech_to_text(self, audio_data, model="openai/whisper-large-v3"):
-        # This usually requires binary data
         url = f"{HF_API_URL}{model}"
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             response = await client.post(url, headers=self.headers, content=audio_data)
             if response.status_code != 200:
-                raise Exception(f"HF API Error: {response.text}")
+                raise Exception(f"HF API STT Error: {response.text}")
             return response.json().get("text", "")
 
 hf_client = HFClient()
