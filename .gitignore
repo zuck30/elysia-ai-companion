@@ -4,3 +4,10 @@ frontend/build
 backend/node_modules
 backend/dist
 .env
+node_modules/
+dist/
+build/
+*.log
+*.env
+*.DS_Store
+*.pem
