@@ -1,29 +1,27 @@
 # Web Server
-fastapi==0.109.2
+fastapi>=0.110.0
 uvicorn==0.27.1
 python-dotenv==1.0.1
-pydantic==2.6.1
+pydantic>=2.6.1
 python-multipart==0.0.9
 websockets==12.0
 
 # Database & Networking
-chromadb==0.4.22
+# Updated to 0.5.x to fix OpenTelemetry/Protobuf recursion
+chromadb>=0.5.0
 requests==2.31.0
-httpx==0.26.0
+httpx>=0.26.0
 aiohttp==3.9.3
 
 # AI & Machine Learning
-# Version 2.17.0 is stable for Mac Python 3.12
+# 2.17.0 is correct for Python 3.12 on Mac
 tensorflow==2.17.0
-# Optimized for Mac M-series GPU acceleration
 tensorflow-metal; sys_platform == 'darwin'
 torch==2.2.0
 transformers==4.37.2
 
 # Vision & Emotion
-# Fixed to avoid the 'moviepy.editor' error
 moviepy==1.0.3
-# FER date-based version
 fer==22.5.1
 opencv-python-headless==4.9.0.80
 pillow==10.2.0
@@ -31,8 +29,8 @@ pillow==10.2.0
 # Audio
 edge-tts==6.1.10
 
-# Utilities
+# Utilities & Dependency Resolution
 numpy==1.26.4
 setuptools<70
-# Critical for FER/TensorFlow compatibility
-protobuf<5.0.0
+# Protobuf 4.25.x is the 'sweet spot' for TF 2.17 and Chroma 0.5+
+protobuf>=4.25.0,<5.0.0
