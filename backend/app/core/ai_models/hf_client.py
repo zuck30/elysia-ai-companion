@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 HF_API_KEY = os.getenv("HF_API_KEY")
-HF_API_URL = "https://api-inference.huggingface.co/models/"
+HF_API_URL = "https://router.huggingface.co/hf-inference/models/"
 
 class HFClient:
     def __init__(self):
