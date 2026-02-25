@@ -53,8 +53,14 @@ const ElysiaCharacter: React.FC<ElysiaCharacterProps> = ({ emotion, isSpeaking }
           y: mousePos.y + (isSpeaking ? -10 : 0),
           rotateX: -mousePos.y * 0.5,
           rotateY: mousePos.x * 0.5,
+          scale: isSpeaking ? [1, 1.02, 1] : [1, 1.01, 1],
         }}
-        transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+        transition={{
+          type: 'spring',
+          stiffness: 50,
+          damping: 20,
+          scale: { repeat: Infinity, duration: 2, ease: "easeInOut" }
+        }}
         className="relative z-10"
       >
         {/* Abstract Fluid Core */}
