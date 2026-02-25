@@ -9,9 +9,9 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Elysia AI Companion API")
+app = FastAPI(title="Elysia-AI Companion API")
 
-# Configure CORS - Muhimu kwa ajili ya mawasiliano na React frontend
+# Configure CORS => Muhimu kwa ajili ya mawasiliano na React frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,17 +27,17 @@ app.include_router(emotion.router, prefix="/api/emotion", tags=["emotion"])
 
 @app.get("/")
 async def root():
-    return {"message": "Elysia AI Companion API is running"}
+    return {"message": "Elysia-AI Companion API is running"}
 
 @app.websocket("/ws/chat")
 async def websocket_endpoint(websocket: WebSocket):
     """
-    Hapa ndipo Elysia anapopokea ujumbe na picha.
-    Tunatumia 'chat_ws.handle_websocket' ambayo tumeihakikisha ipo.
+    Hapa ndipo Elysia anapopokea texts na pics.
+    Tunatumia 'chat_ws.handle_websocket' ambayo i checked ipo.
     """
     try:
-        # Tunaita function moja kwa moja kutoka kwenye module ya chat_ws
+        # We call function directly from module ya chat_ws
         await chat_ws.handle_websocket(websocket)
     except Exception as e:
         logger.error(f"WebSocket Runtime Error: {e}")
-        # Hii inazuia server isizime (crash) kama kuna tatizo la connection
+        # This prevents server isizime (crash) kama kuna tatizo la connection
