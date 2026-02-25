@@ -1,6 +1,6 @@
 # Elysia.
 
-![Elysia Banner](https://w.wallhaven.cc/full/j3/wallhaven-j3zj1w.png)
+![Elysia Banner](./pic/elysia.png)
 
 <p align="center">Elysia isn't just an assistant, she's a presence. Built for those who value both high-end design and neural performance, she brings a human touch to artificial intelligence. No sidebars, no clutter—just one immersive screen where classical beauty meets the edge of what's possible.</p>
 
