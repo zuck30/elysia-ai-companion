@@ -22,7 +22,7 @@ class EmotionEngine:
 
     async def analyze_text_emotion(self, text):
         model = "facebook/bart-large-mnli"
-        candidate_labels = ["happy", "sad", "angry", "surprised", "neutral", "loving", "curious"]
+        candidate_labels = ["happy", "sad", "angry", "surprised", "neutral", "loving", "curious", "bored", "anxious", "confused"]
         payload = {
             "inputs": text,
             "parameters": {"candidate_labels": candidate_labels}
