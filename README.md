@@ -1,7 +1,5 @@
 # Elysia.
 
-![Elysia Banner](https://w.wallhaven.cc/full/j3/wallhaven-j3zj1w.png)
-
 <p align="center">Elysia isn't just an assistant, she's a presence. Built for those who value both high-end design and neural performance, she brings a human touch to artificial intelligence. No sidebars, no clutter—just one immersive screen where classical beauty meets the edge of what's possible.</p>
 
 ![React](https://img.shields.io/badge/React-18.2.0-61DAFB) ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.0-009688) ![Mistral-7B](https://img.shields.io/badge/Mistral-7B-FFD21E) ![Moondream2](https://img.shields.io/badge/Moondream2-VLM-8A2BE2)
