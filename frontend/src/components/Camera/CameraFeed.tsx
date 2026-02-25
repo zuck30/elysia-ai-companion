@@ -5,10 +5,12 @@ interface CameraFeedProps {
   isActive: boolean;
   onFrame: (image: string) => void;
   isHidden?: boolean;
+  webcamRef?: React.RefObject<Webcam>;
 }
 
-const CameraFeed: React.FC<CameraFeedProps> = ({ isActive, onFrame, isHidden = true }) => {
-  const webcamRef = useRef<Webcam>(null);
+const CameraFeed: React.FC<CameraFeedProps> = ({ isActive, onFrame, isHidden = true, webcamRef: externalWebcamRef }) => {
+  const internalWebcamRef = useRef<Webcam>(null);
+  const webcamRef = externalWebcamRef || internalWebcamRef;
 
   const capture = useCallback(() => {
     if (isActive && webcamRef.current) {

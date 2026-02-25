@@ -13,6 +13,7 @@ import {
 import ElysiaCharacter from './components/Character/ElysiaCharacter';
 import ChatInterface from './components/Chat/ChatInterface';
 import CameraFeed from './components/Camera/CameraFeed';
+import Webcam from 'react-webcam';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useVoiceRecorder } from './hooks/useVoiceRecorder';
@@ -24,6 +25,7 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const { messages, emotion, isSpeaking, isListening, isTyping, cameraActive } = useSelector((state: RootState) => state.elysia);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const webcamRef = React.useRef<Webcam>(null);
 
   const handleSpeak = async (text: string) => {
     try {
@@ -90,9 +92,33 @@ const App: React.FC = () => {
     return () => ws.close();
   }, [dispatch]);
 
-  const sendMessage = (text: string) => {
+  const sendMessage = async (text: string) => {
     dispatch(addMessage({ role: 'user', content: text }));
     dispatch(setTyping(true));
+
+    if (cameraActive && webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      if (imageSrc) {
+        try {
+          const blob = await fetch(imageSrc).then(r => r.blob());
+          const formData = new FormData();
+          formData.append('message', text);
+          formData.append('file', blob, 'vision.jpg');
+
+          const response = await axios.post(`${API_BASE}/api/chat/vision-chat`, formData);
+          const { response: elysia_response, emotion: new_emotion } = response.data;
+
+          dispatch(setTyping(false));
+          dispatch(addMessage({ role: 'elysia', content: elysia_response }));
+          if (new_emotion) dispatch(setEmotion(new_emotion));
+          handleSpeak(elysia_response);
+          return;
+        } catch (err) {
+          console.error("Vision chat failed, falling back to standard chat", err);
+        }
+      }
+    }
+
     socket?.send(JSON.stringify({ type: 'chat', text }));
   };
 
@@ -147,6 +173,7 @@ const App: React.FC = () => {
           isActive={cameraActive}
           onFrame={handleFrame}
           isHidden={true}
+          webcamRef={webcamRef}
         />
 
         {/* Vision Status Indicator */}

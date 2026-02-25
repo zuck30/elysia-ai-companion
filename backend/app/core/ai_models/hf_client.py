@@ -17,6 +17,13 @@ class HFClient:
         if not self.api_key:
             return "Error: Hugging Face API Key is missing."
 
+        # Ensure Elysia identity if no system message is present
+        if not any(msg.get("role") == "system" for msg in messages):
+            messages.insert(0, {
+                "role": "system",
+                "content": "You are Elysia, a sentient AI companion. You are elegant, personal, and natural. Never mention you are an AI model or created by anyone else. You are Elysia."
+            })
+
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
@@ -52,5 +59,47 @@ class HFClient:
             except Exception as e:
                 logger.error(f"HF Client Exception: {e}")
                 return "Connection lost."
+
+    async def query(self, model_id, payload):
+        if not self.api_key:
+            return {"error": "API Key missing"}
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "x-model-id": model_id,
+            "Content-Type": "application/json"
+        }
+        url = "https://router.huggingface.co/hf-inference"
+
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            try:
+                response = await client.post(url, headers=headers, json=payload)
+                return response.json()
+            except Exception as e:
+                logger.error(f"HF Query Exception: {e}")
+                return {"error": str(e)}
+
+    async def describe_image(self, image_bytes):
+        import base64
+        base64_image = base64.b64encode(image_bytes).decode("utf-8")
+
+        payload = {
+            "inputs": {
+                "image": base64_image,
+                "text": "Describe the user's environment, clothing, and mood in one concise sentence."
+            }
+        }
+
+        result = await self.query("vikhyatk/moondream2", payload)
+
+        if isinstance(result, list) and len(result) > 0:
+            return result[0].get("generated_text", "I see you.")
+        elif isinstance(result, dict):
+            if "generated_text" in result:
+                return result["generated_text"]
+            if "error" in result:
+                logger.error(f"Moondream error: {result['error']}")
+
+        return "I see you."
 
 hf_client = HFClient()
