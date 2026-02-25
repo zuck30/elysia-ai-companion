@@ -1,17 +1,18 @@
 
----
+# <p align="center">E L Y S I A</p>
 
 <p align="center">Elysia AI, but make it elegant</p>
 
 <p align="center">
-<img src="[https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)" alt="FastAPI">
-<img src="[https://img.shields.io/badge/Language-Python-3776AB?style=for-the-badge&logo=python&logoColor=white](https://img.shields.io/badge/Language-Python-3776AB?style=for-the-badge&logo=python&logoColor=white)" alt="Python">
-<img src="[https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black)" alt="React">
-<img src="[https://img.shields.io/badge/Typing-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white](https://img.shields.io/badge/Typing-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
+  <img src="https://img.shields.io/badge/Language-Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Typing-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
 </p>
+
 <p align="center">
-<img src="[https://img.shields.io/badge/Model-Hugging_Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black](https://img.shields.io/badge/Model-Hugging_Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)" alt="Hugging Face">
-<img src="[https://img.shields.io/badge/Repository-GitHub-181717?style=for-the-badge&logo=github&logoColor=white](https://img.shields.io/badge/Repository-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)" alt="GitHub">
+  <img src="https://img.shields.io/badge/Model-Hugging_Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" />
+  <img src="https://img.shields.io/badge/Repository-GitHub-181717?style=for-the-badge&logo=github&logoColor=white" />
 </p>
 
 ---
@@ -26,11 +27,11 @@ Elysia isn't just an assistant—she’s a presence. Built for those who value b
 
 ### Why Elysia?
 
-* **👁️ Aware & Responsive**: Using custom physics, Elysia maintains eye contact and tracks your movement, reacting to your presence in real-time.
-* **🌫️ Glass-First UI**: A hyper-clean interface stripped of headers and buttons. Every element is wrapped in high-grade glassmorphism for a cinematic, tactile feel.
-* **🎭 Emotional Depth**: Her core shifts through living states—moving between calm contemplation and vibrant response based on the flow of your conversation.
-* **📽️ Invisible Sight**: Built with **Moondream2**, Elysia sees through your eyes. She recognizes your world and mood without ever needing to show a distracting camera preview.
-* **🧬 Fluid Voice**: Forget the robotic delay. With ultra-low latency STT and emotive synthesis, the conversation flows like a natural breath.
+* 👁️ Aware & Responsive: Using custom physics, Elysia maintains eye contact and tracks your movement, reacting to your presence in real-time.
+* 🌫️ Glass-First UI: A hyper-clean interface stripped of headers and buttons. Every element is wrapped in high-grade glassmorphism for a cinematic, tactile feel.
+* 🎭 Emotional Depth: Her core shifts through living states—moving between calm contemplation and vibrant response based on the flow of your conversation.
+* 📽️ Invisible Sight: Built with Moondream2, Elysia sees through your eyes. She recognizes your world and mood without ever needing to show a distracting camera preview.
+* 🧬 Fluid Voice: Forget the robotic delay. With ultra-low latency STT and emotive synthesis, the conversation flows like a natural breath.
 
 ---
 
@@ -38,11 +39,11 @@ Elysia isn't just an assistant—she’s a presence. Built for those who value b
 
 | Component | Technology |
 | --- | --- |
-| **The Face** | React 18, Framer Motion (3D Perspective) |
-| **The Style** | Tailwind CSS, Custom Noise Shaders |
-| **The Brain** | Mistral-7B via Hugging Face |
-| **The Eyes** | Moondream2 (Vision-Language Model) |
-| **The Core** | FastAPI & ChromaDB |
+| The Face | React 18, Framer Motion (3D Perspective) |
+| The Style | Tailwind CSS, Custom Noise Shaders |
+| The Brain | Mistral-7B via Hugging Face |
+| The Eyes | Moondream2 (Vision-Language Model) |
+| The Core | FastAPI & ChromaDB |
 
 ---
 
@@ -53,21 +54,32 @@ Elysia isn't just an assistant—she’s a presence. Built for those who value b
 Clone the repository and prepare your neural configuration:
 
 ```bash
-git clone https://github.com/zuck30/elysia-ai-companion.git 
+git clone [https://github.com/zuck30/elysia-ai-companion.git](https://github.com/zuck30/elysia-ai-companion.git) 
 cd elysia
 
 ```
 
-Create a `.env` file in the root directory:
+Create a .env file in the root directory:
 
 ```env
 HF_API_KEY=your_hugging_face_token_here
 
 ```
 
-#### 2. Launching the Backend (The Nervous System)
+#### 2. Containerization (Recommended)
 
-Ignite the engine via FastAPI to handle vision processing and LLM orchestration.
+To launch the entire ecosystem—including the FastAPI backend, React frontend, and ChromaDB—using Docker Compose:
+
+```bash
+docker-compose up --build
+
+```
+
+#### 3. Manual Installation
+
+If you prefer to run the services individually:
+
+**The Nervous System (Backend)**
 
 ```bash
 cd backend
@@ -76,9 +88,7 @@ uvicorn app.main:app --reload --port 8000
 
 ```
 
-#### 3. Launching the Frontend (The Face)
-
-In a new terminal, bring the interface to life:
+**The Face (Frontend)**
 
 ```bash
 cd frontend
@@ -87,18 +97,14 @@ npm start
 
 ```
 
-*Visit http://localhost:3000 to begin the sync.*
-
 ---
 
 ### Design Philosophy
 
-We built Elysia on the principle of **Active Presence**. We believe software should feel alive. Her interface is designed to disappear into the background, leaving only a seamless connection between you and a machine that finally feels a bit more human.
+We built Elysia on the principle of Active Presence. We believe software should feel alive. Her interface is designed to disappear into the background, leaving only a seamless connection between you and a machine that finally feels a bit more human.
 
 ---
 
 <p align="center">
 Built by Zuck30
 </p>
-
----
