@@ -25,10 +25,9 @@ async def get_tts(text: str):
     Generates speech for Elysia. 
     Prevents crash if text contains an error code.
     """
-    # CIRCUIT BREAKER: Don't try to speak error codes
     if "Error_" in text or "API_" in text:
         logger.warning(f"Skipping TTS for error: {text}")
-        raise HTTPException(status_code=204, detail="Error message - no audio.")
+        raise HTTPException(status_code=204, detail="Error message => no audio.")
 
     try:
         path = await tts_engine.generate_audio(text)
