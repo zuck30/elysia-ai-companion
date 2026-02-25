@@ -96,8 +96,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       {/* Message Area */}
       <div 
         ref={scrollRef}
-        className="flex-1 overflow-y-auto px-4 py-10 space-y-4 scrollbar-none scroll-smooth flex flex-col w-full max-w-[700px] mx-auto"
-        style={{ height: 'calc(100vh - 120px)' }}
+        className="flex-1 overflow-y-auto px-4 py-10 space-y-4 scroll-smooth flex flex-col w-full max-w-[700px] mx-auto"
+        style={{ height: 'calc(100vh - 160px)' }}
       >
         <AnimatePresence mode='popLayout' initial={false}>
           {messages.map((msg, i) => (

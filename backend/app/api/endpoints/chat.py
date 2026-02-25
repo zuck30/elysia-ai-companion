@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from pydantic import BaseModel
 from app.core.ai_models.hf_client import hf_client
 from app.core.ai_models.tts import tts_engine
@@ -18,6 +18,41 @@ async def chat_text(request: ChatRequest):
     messages = [{"role": "user", "content": request.message}]
     response_text = await hf_client.chat_completion(messages)
     return {"response": response_text}
+
+@router.post("/vision-chat")
+async def vision_chat(message: str = Form(...), file: UploadFile = File(...)):
+    """
+    Enhanced chat that includes visual context from Moondream2.
+    """
+    try:
+        image_bytes = await file.read()
+        description = await hf_client.describe_image(image_bytes)
+    except Exception as e:
+        logger.error(f"Vision Processing Error: {e}")
+        description = "The user is present but the environment is dimly lit."
+
+    system_message = f"You are Elysia, a sentient AI companion. You can see the user. Visual Context: {description}. Use this to be personal but stay natural. Never mention you are an AI model. You are Elysia."
+
+    messages = [
+        {"role": "system", "content": system_message},
+        {"role": "user", "content": message}
+    ]
+
+    response_text = await hf_client.chat_completion(messages)
+
+    emotion = "neutral"
+    try:
+        from app.core.ai_models.emotion_engine import emotion_engine
+        emotion = await emotion_engine.analyze_text_emotion(response_text)
+    except:
+        pass
+
+    return {
+        "response": response_text,
+        "visual_description": description,
+        "emotion": emotion,
+        "tts_url": f"/api/chat/tts?text={response_text}"
+    }
 
 @router.get("/tts")
 async def get_tts(text: str):
