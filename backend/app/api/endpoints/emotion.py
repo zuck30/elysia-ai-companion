@@ -11,5 +11,5 @@ async def analyze_face(image: UploadFile = File(...)):
 
 @router.get("/state")
 async def get_emotion_state():
-    # This could be more complex, tracking state over time
+
     return {"state": "neutral"}
