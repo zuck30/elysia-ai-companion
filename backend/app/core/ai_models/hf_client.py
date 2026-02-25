@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 HF_API_KEY = os.getenv("HF_API_KEY")
-# Reverted to the Router URL as api-inference is throwing 410 Gone for these models
-HF_API_URL = "https://router.huggingface.co/hf-inference/models/"
+# Use unified Router URL
+HF_API_URL = "https://router.huggingface.co/hf-inference"
 
 class HFClient:
     def __init__(self):
@@ -16,9 +16,10 @@ class HFClient:
         self.timeout = 60.0
 
     async def query(self, model_id, payload):
-        url = f"{HF_API_URL}{model_id}"
+        url = HF_API_URL
+        headers = {**self.headers, "x-model-id": model_id}
         async with httpx.AsyncClient(timeout=self.timeout) as client:
-            response = await client.post(url, headers=self.headers, json=payload)
+            response = await client.post(url, headers=headers, json=payload)
             
             if response.status_code == 503:
                 return {"error": "Model loading"}
@@ -78,9 +79,10 @@ class HFClient:
         return "My vision is a bit blurry right now."
 
     async def speech_to_text(self, audio_data, model="openai/whisper-large-v3"):
-        url = f"{HF_API_URL}{model}"
+        url = HF_API_URL
+        headers = {**self.headers, "x-model-id": model}
         async with httpx.AsyncClient(timeout=self.timeout) as client:
-            response = await client.post(url, headers=self.headers, content=audio_data)
+            response = await client.post(url, headers=headers, content=audio_data)
             if response.status_code != 200:
                 raise Exception(f"HF API STT Error: {response.text}")
             return response.json().get("text", "")
