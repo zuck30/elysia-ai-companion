@@ -1,110 +1,137 @@
+# Elysia.
 
-# <p align="center">E L Y S I A</p>
+![Elysia Banner](https://capsule-render.vercel.app/api?type=venom&height=200&color=0:0f2027,100:203a43,30:2c5364&text=%20Elysia&textBg=false&desc=(AI+That+Sees+%26+Feels)&descAlign=79&fontAlign=50&descAlignY=70&fontColor=f7f5f5)
 
-<p align="center">Elysia AI, but make it elegant</p>
+<p align="center">Elysia isn't just an assistant, she's a presence. Built for those who value both high-end design and neural performance, she brings a human touch to artificial intelligence. No sidebars, no clutter—just one immersive screen where classical beauty meets the edge of what's possible.</p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
-  <img src="https://img.shields.io/badge/Language-Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
-  <img src="https://img.shields.io/badge/Typing-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-</p>
+![React](https://img.shields.io/badge/React-18.2.0-61DAFB) ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.0-009688) ![Mistral-7B](https://img.shields.io/badge/Mistral-7B-FFD21E) ![Moondream2](https://img.shields.io/badge/Moondream2-VLM-8A2BE2)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Model-Hugging_Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black" />
-  <img src="https://img.shields.io/badge/Repository-GitHub-181717?style=for-the-badge&logo=github&logoColor=white" />
-</p>
+<h3>Quick Links</h3>
 
----
+<div align="left">
+    <a href="mailto:mwalyangashadrack.email@gmail.com"><img src="https://img.shields.io/badge/Contact%20Me-30302f?style=flat-square&logo=gmail" alt=""></a>
+    <a href="https://github.com/zuck30/elysia-ai-companion.git"><img src="https://img.shields.io/badge/Repository-30302f?style=flat-square&logo=github" alt=""></a>
+</div>
 
-### The Vision
+<br>
+<ul>
+    <li>👁️ <strong>Aware & Responsive:</strong> Using custom physics, Elysia maintains eye contact and tracks your movement</li>
+    <li>🧠 <strong>Powered by Mistral-7B:</strong> Fine-tuned for emotionally intelligent conversation via Hugging Face</li>
+    <li>👀 <strong>Visual Awareness:</strong> Built with Moondream2, Elysia sees through your eyes without camera previews</li>
+    <li>🎭 <strong>Emotional Depth:</strong> Core shifts through living states based on conversation flow</li>
+</ul>
 
-Elysia isn't just an assistant—she’s a presence. Built for those who value both high-end design and neural performance, she brings a human touch to artificial intelligence. No sidebars, no clutter—just one immersive screen where classical beauty meets the edge of what's possible.
+<h2 id=lang>Tech Stack</h2>
+
+**Frontend**
+
+![My Skills](https://skillicons.dev/icons?i=react,ts,tailwind,js,html,css&perline=10)
+
+**Backend**
+
+![My Skills](https://skillicons.dev/icons?i=python,fastapi,docker&perline=10)
+
+**ML & AI**
+
+![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)
+![Mistral AI](https://img.shields.io/badge/Mistral-7B-2A6DF4?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptMCAxOGMtNC40MSAwLTgtMy41OS04LThzMy41OS04IDgtOCA4IDMuNTkgOCA4LTMuNTkgOC04IDh6IiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==)
+
+**Tools & Platforms**
+
+![tools](https://skillicons.dev/icons?i=git,docker,github,vercel,apple,vscode&perline=10)
+
+<h2> Quick Start</h2>
+
+### Prerequisites
+
+- Python 3.9+
+- Node.js 18+
+- Docker (optional but recommended)
+- Hugging Face API Token
+
+### Installation & Setup
 
 > *"Intelligence should be felt, not just read."*
 
----
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/zuck30/elysia-ai-companion.git
+    cd elysia
+    ```
 
-### Why Elysia?
+2.  **Set Up Environment Variables**
+    - Create a `.env` file in the root directory:
+      ```env
+      HUGGINGFACE_API_KEY=your_hugging_face_token_here
+      # Add any additional configuration variables
+      ```
 
-* 👁️ Aware & Responsive: Using custom physics, Elysia maintains eye contact and tracks your movement, reacting to your presence in real-time.
-* 🌫️ Glass-First UI: A hyper-clean interface stripped of headers and buttons. Every element is wrapped in high-grade glassmorphism for a cinematic, tactile feel.
-* 🎭 Emotional Depth: Her core shifts through living states—moving between calm contemplation and vibrant response based on the flow of your conversation.
-* 📽️ Invisible Sight: Built with Moondream2, Elysia sees through your eyes. She recognizes your world and mood without ever needing to show a distracting camera preview.
-* 🧬 Fluid Voice: Forget the robotic delay. With ultra-low latency STT and emotive synthesis, the conversation flows like a natural breath.
+3.  **Option A: Containerization (Recommended)**
+    ```bash
+    # Launch entire ecosystem - backend, frontend, and ChromaDB
+    docker-compose up --build
+    ```
 
----
+4.  **Option B: Manual Installation**
 
-### The Stack
+    **The Nervous System (Backend)**
+    ```bash
+    cd backend
+    pip install -r requirements.txt
+    uvicorn app.main:app --reload --port 8000
+    ```
+    The backend API will be running at `http://127.0.0.1:8000`.
 
-| Component | Technology |
-| --- | --- |
-| The Face | React 18, Framer Motion (3D Perspective) |
-| The Style | Tailwind CSS, Custom Noise Shaders |
-| The Brain | Mistral-7B via Hugging Face |
-| The Eyes | Moondream2 (Vision-Language Model) |
-| The Core | FastAPI & ChromaDB |
-
----
-
-### Getting Started
-
-#### 1. Setup the Environment
-
-Clone the repository and prepare your neural configuration:
-
-```bash
-git clone [https://github.com/zuck30/elysia-ai-companion.git](https://github.com/zuck30/elysia-ai-companion.git) 
-cd elysia
-
-```
-
-Create a .env file in the root directory:
-
-```env
-HUGGINGFACE_API_KEY=your_hugging_face_token_here
-
-```
-
-#### 2. Containerization (Recommended)
-
-To launch the entire ecosystem—including the FastAPI backend, React frontend, and ChromaDB—using Docker Compose:
-
-```bash
-docker-compose up --build
-
-```
-
-#### 3. Manual Installation
-
-If you prefer to run the services individually:
-
-**The Nervous System (Backend)**
-
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-
-```
-
-**The Face (Frontend)**
-
-```bash
-cd frontend
-npm install
-npm start
-
-```
-
----
+    **The Face (Frontend)**
+    ```bash
+    cd frontend
+    npm install
+    npm start
+    ```
+    The frontend application will open at `http://localhost:3000`.
 
 ### Design Philosophy
 
-We built Elysia on the principle of Active Presence. We believe software should feel alive. Her interface is designed to disappear into the background, leaving only a seamless connection between you and a machine that finally feels a bit more human.
+I built Elysia on the principle of **Active Presence**. I believe software should feel alive. Her interface is designed to disappear into the background, leaving only a seamless connection between you and a machine that finally feels a bit more human.
 
----
+### Elysia Overview
 
-<p align="center">
-Built by Zuck30
+<h2>The Immersive Interface</h2>
+
+![Demo](./video/elysia.mp4)
+
+<h2> TODO: </h2>
+<h3>Enhance the Neural Architecture</h3>
+
+- **Improved Eye Contact Physics**: Fine-tune head tracking and gaze response
+- **Multi-modal Memory**: Implement ChromaDB for long-term conversation memory
+- **Voice Synthesis Upgrade**: Lower latency STT with more emotive range
+- **Expanded Vision Capabilities**: Fine-tune Moondream2 for better mood recognition
+- **Mobile Optimization**: Adapt the immersive experience for smaller screens
+
+<h2> Responsive Design</h2>
+
+The application is optimized for all device sizes:
+- Mobile phones (320px and up) 
+- Tablets (768px and up)
+- Laptops (1024px and up)
+- Large screens (1200px and up)
+
+<h2> Support the Project</h2>
+<p>
+    <a href="https://www.buymeacoffee.com/zuck30" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-red.png" alt="Buy Me A Coffee" height="30px" ></a>
 </p>
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+## Support
+
+If you have any questions or issues, please open an issue on GitHub or contact me at mwalyangashadrack@gmail.com
+
+## Experience Elysia
+
+I hope you enjoy connecting with an AI that finally feels a bit more human. Share your conversations and experiences with the community!
+
+**Note**: Elysia is designed as an experimental AI companion. While emotionally intelligent, she remains an artificial intelligence and should be used as a tool for exploration and conversation.
