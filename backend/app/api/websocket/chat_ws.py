@@ -69,6 +69,5 @@ class ChatWebSocketHandler:
 # Create the instance
 handler_instance = ChatWebSocketHandler()
 
-# THIS IS THE FUNCTION main.py IS LOOKING FOR
 async def handle_websocket(websocket: WebSocket):
     await handler_instance.handle_websocket(websocket)
