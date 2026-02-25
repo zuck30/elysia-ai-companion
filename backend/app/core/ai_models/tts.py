@@ -9,6 +9,7 @@ class TTSEngine:
     def __init__(self):
         # I'm using a specific voice here, If you fork you can change it to any voice supported by edge-tts. 
         # Check the documentation for available voices. --- IGNORE ---
+        #self.voice = "en-US-JennyNeural" 
         self.voice = "en-US-AvaNeural" 
         self.output_dir = "temp_audio"
         
