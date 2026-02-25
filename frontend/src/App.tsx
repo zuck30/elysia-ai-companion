@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
 import { 
@@ -13,10 +13,10 @@ import {
 import ElysiaCharacter from './components/Character/ElysiaCharacter';
 import ChatInterface from './components/Chat/ChatInterface';
 import CameraFeed from './components/Camera/CameraFeed';
-import VoiceControl from './components/Chat/VoiceControl';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, Info, History, Sparkles } from 'lucide-react';
+import { Settings, History, Sparkles } from 'lucide-react';
 import axios from 'axios';
+import { useVoiceRecorder } from './hooks/useVoiceRecorder';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 const WS_BASE = process.env.REACT_APP_WS_URL || 'ws://localhost:8000';
@@ -25,6 +25,36 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const { messages, emotion, isSpeaking, isListening, isTyping, cameraActive } = useSelector((state: RootState) => state.elysia);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+
+  const handleVoiceInput = async (audioBlob: Blob) => {
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'voice.wav');
+
+    try {
+      dispatch(setTyping(true));
+      const response = await axios.post(`${API_BASE}/api/chat/voice`, formData);
+      const { user_text, response: elysia_response } = response.data;
+
+      dispatch(addMessage({ role: 'user', content: user_text }));
+      dispatch(addMessage({ role: 'elysia', content: elysia_response }));
+      dispatch(setTyping(false));
+      handleSpeak(elysia_response);
+    } catch (err) {
+      console.error("Voice processing failed", err);
+      dispatch(setTyping(false));
+    }
+  };
+
+  const { toggleRecording } = useVoiceRecorder((blob) => {
+    dispatch(setListening(false));
+    handleVoiceInput(blob);
+  });
+
+  const handleToggleListening = () => {
+    const nextState = !isListening;
+    dispatch(setListening(nextState));
+    toggleRecording();
+  };
 
   useEffect(() => {
     const ws = new WebSocket(`${WS_BASE}/ws/chat`);
@@ -67,27 +97,7 @@ const App: React.FC = () => {
     socket?.send(JSON.stringify({ type: 'chat', text }));
   };
 
-  const handleVoiceInput = async (audioBlob: Blob) => {
-    const formData = new FormData();
-    formData.append('audio', audioBlob, 'voice.wav');
-    
-    try {
-      dispatch(setTyping(true));
-      const response = await axios.post(`${API_BASE}/api/chat/voice`, formData);
-      const { user_text, response: elysia_response } = response.data;
-      
-      dispatch(addMessage({ role: 'user', content: user_text }));
-      dispatch(addMessage({ role: 'elysia', content: elysia_response }));
-      dispatch(setTyping(false));
-      handleSpeak(elysia_response);
-    } catch (err) {
-      console.error("Voice processing failed", err);
-      dispatch(setTyping(false));
-    }
-  };
-
   const handleFrame = async (imageSrc: string) => {
-    // Convert base64 to blob
     const fetchRes = await fetch(imageSrc);
     const blob = await fetchRes.blob();
     const formData = new FormData();
@@ -96,112 +106,105 @@ const App: React.FC = () => {
     try {
       const response = await axios.post(`${API_BASE}/api/vision/analyze`, formData);
       dispatch(setVisionAnalysis(response.data.analysis));
-      // Optionally have Elysia comment on what she sees if it's significant
     } catch (err) {
       console.error("Vision analysis failed", err);
     }
   };
 
-  const getTimeColor = () => {
-    const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) return 'from-orange-900/20'; // Morning
-    if (hour >= 12 && hour < 17) return 'from-blue-900/20';   // Afternoon
-    if (hour >= 17 && hour < 21) return 'from-purple-900/20'; // Evening
-    return 'from-indigo-900/20';                             // Night
-  };
-
   return (
-    <div className="h-screen w-full bg-[#08080a] text-zinc-100 flex flex-col selection:bg-blue-500/30 overflow-hidden font-['Inter']">
-      {/* Dynamic Background Effects */}
-      <div className="noise opacity-10" />
+    <div className="h-screen w-full bg-[#08080a] text-zinc-100 flex flex-col overflow-hidden font-avenir selection:bg-snapchat-blue/30">
+      {/* Cinematic Background */}
+      <div className="noise opacity-20" />
+      <div className="fixed inset-0 bg-gradient-to-b from-black via-zinc-900 to-black opacity-80" />
+
+      {/* Animated Glows */}
       <motion.div
         animate={{
-          opacity: [0.3, 0.5, 0.3],
-          scale: [1, 1.1, 1]
+          opacity: [0.1, 0.2, 0.1],
+          scale: [1, 1.2, 1],
         }}
-        transition={{ duration: 10, repeat: Infinity }}
-        className={`fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,_var(--tw-gradient-from)_0%,_transparent_100%)] ${getTimeColor()} to-transparent pointer-events-none transition-colors duration-1000`}
+        transition={{ duration: 8, repeat: Infinity }}
+        className="fixed -top-1/4 -left-1/4 w-full h-full bg-snapchat-blue/20 blur-[120px] rounded-full pointer-events-none"
       />
-      
-      {/* Top Navigation Bar - Snapchat Style */}
-      <header className="z-30 w-full px-6 py-4 flex justify-between items-center bg-black/20 backdrop-blur-xl border-b border-white/5">
-        <div className="flex items-center space-x-4">
+
+      {/* Snapchat Navigation Header */}
+      <header className="z-50 flex items-center justify-between px-4 py-3 backdrop-blur-md bg-black/40 border-b border-white/5">
+        <div className="flex items-center space-x-3">
           <div className="relative">
-            <div className="w-12 h-12 bg-[#FFFC00] rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(255,252,0,0.4)] group cursor-pointer overflow-hidden relative">
-               <motion.span
-                 initial={{ y: 20, scale: 0.5 }}
-                 animate={{ y: 0, scale: 1 }}
-                 className="text-black font-black text-3xl tracking-tighter z-10"
-               >
-                 E
-               </motion.span>
+            <div className="w-10 h-10 bg-gradient-to-tr from-snapchat-yellow to-yellow-500 rounded-2xl flex items-center justify-center overflow-hidden shadow-[0_0_15px_rgba(255,252,0,0.3)] relative">
                <motion.div
-                 animate={{ x: ['-100%', '100%'] }}
-                 transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                 className="absolute inset-0 bg-white/30 skew-x-12"
-               />
+                animate={{ x: ['-100%', '100%'] }}
+                transition={{ repeat: Infinity, duration: 2.5, ease: "linear" }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12"
+              />
+               <span className="text-black font-black text-xl relative z-10">E</span>
             </div>
             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-[#08080a] rounded-full" />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-xl font-black tracking-tighter text-white uppercase leading-none">
-              E<span className="text-blue-500">lysi</span>a
+            <h1 className="text-lg font-black tracking-tighter text-white leading-none uppercase">
+              Elysia
             </h1>
-            <span className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">Neural Sync Active</span>
+            <div className="flex items-center space-x-1">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Neural Sync</span>
+            </div>
           </div>
         </div>
 
         <div className="flex items-center space-x-3">
-          <CameraFeed
+           <CameraFeed
             isActive={cameraActive}
             onFrame={handleFrame}
             toggleCamera={() => dispatch(setCameraActive(!cameraActive))}
           />
-          <button className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 transition-all text-zinc-400 hover:text-white">
-            <History size={20} />
+          <button className="p-2 text-zinc-400 hover:text-white transition-colors">
+            <History size={22} />
           </button>
-          <button className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 transition-all text-zinc-400 hover:text-white">
-            <Settings size={20} />
+          <button className="p-2 text-zinc-400 hover:text-white transition-colors">
+            <Settings size={22} />
           </button>
         </div>
       </header>
 
-      <main className="z-10 flex-1 w-full flex overflow-hidden relative">
-        {/* Left Side - Character Visualization */}
-        <div className="hidden lg:grid grid-rows-[1fr_auto] flex-1 relative bg-gradient-to-br from-black/20 to-transparent overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(59,130,246,0.1)_0%,_transparent_70%)]" />
+      {/* Main Content Area */}
+      <main className="flex-1 relative flex flex-col lg:flex-row overflow-hidden">
 
-          <div className="flex items-center justify-center relative z-10">
+        {/* Character Visualization - Integrated Background/Side Element */}
+        <div className="absolute inset-0 lg:relative lg:flex-1 flex items-center justify-center pointer-events-none lg:pointer-events-auto">
+          <div className="w-full h-full max-w-2xl opacity-40 lg:opacity-100 transition-opacity duration-700">
             <ElysiaCharacter emotion={emotion} isSpeaking={isSpeaking} />
           </div>
 
-          <div className="w-full max-w-xl mx-auto px-12 pb-12 z-20">
-            <VoiceControl 
-              onVoiceInput={handleVoiceInput} 
-              isListening={isListening} 
-              setIsListening={(val) => dispatch(setListening(val))}
-              isSpeaking={isSpeaking}
-            />
-          </div>
+          {/* Desktop Visualizer (Optional) */}
+          {isListening && (
+            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center space-x-2 bg-black/60 backdrop-blur-3xl px-6 py-4 rounded-full border border-snapchat-blue/30 shadow-[0_0_30px_rgba(0,185,255,0.2)]">
+               <div className="flex items-center space-x-1 h-8">
+                {[...Array(12)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    animate={{ height: [8, 24, 12, 32, 8] }}
+                    transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.05 }}
+                    className="w-1.5 bg-snapchat-blue rounded-full"
+                  />
+                ))}
+              </div>
+              <span className="text-sm font-black text-white uppercase tracking-widest ml-4">Listening...</span>
+            </div>
+          )}
         </div>
 
-        {/* Right Side - Chat Area */}
-        <div className="flex-1 lg:flex-none lg:w-[520px] h-full border-l border-white/10 bg-black/40 backdrop-blur-3xl flex flex-col relative shadow-2xl">
+        {/* Chat Interface - Mobile First Full Screen, Desktop Sidebar */}
+        <div className="relative z-10 flex-1 lg:max-w-md lg:border-l border-white/10 bg-black/20 lg:bg-black/40 backdrop-blur-sm lg:backdrop-blur-2xl flex flex-col shadow-2xl">
           <ChatInterface 
             messages={messages} 
             onSendMessage={sendMessage} 
             isTyping={isTyping}
+            isListening={isListening}
+            setIsListening={handleToggleListening}
+            isSpeaking={isSpeaking}
+            onVoiceInput={handleVoiceInput}
           />
-
-          {/* Mobile Voice Control Overlay */}
-          <div className="lg:hidden absolute bottom-24 left-6 right-6 z-20">
-             <VoiceControl
-              onVoiceInput={handleVoiceInput}
-              isListening={isListening}
-              setIsListening={(val) => dispatch(setListening(val))}
-              isSpeaking={isSpeaking}
-            />
-          </div>
         </div>
       </main>
     </div>
