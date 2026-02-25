@@ -1,12 +1,17 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.endpoints import chat, vision, emotion
 from app.api.websocket import chat_ws
 import os
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Elysia AI Companion API")
 
-# Configure CORS
+# Configure CORS - Muhimu kwa ajili ya mawasiliano na React frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,7 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
+# Include routers kwa ajili ya REST endpoints
 app.include_router(chat.router, prefix="/api/chat", tags=["chat"])
 app.include_router(vision.router, prefix="/api/vision", tags=["vision"])
 app.include_router(emotion.router, prefix="/api/emotion", tags=["emotion"])
@@ -26,4 +31,13 @@ async def root():
 
 @app.websocket("/ws/chat")
 async def websocket_endpoint(websocket: WebSocket):
-    await chat_ws.handle_websocket(websocket)
+    """
+    Hapa ndipo Elysia anapopokea ujumbe na picha.
+    Tunatumia 'chat_ws.handle_websocket' ambayo tumeihakikisha ipo.
+    """
+    try:
+        # Tunaita function moja kwa moja kutoka kwenye module ya chat_ws
+        await chat_ws.handle_websocket(websocket)
+    except Exception as e:
+        logger.error(f"WebSocket Runtime Error: {e}")
+        # Hii inazuia server isizime (crash) kama kuna tatizo la connection

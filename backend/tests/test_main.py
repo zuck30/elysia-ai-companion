@@ -11,5 +11,5 @@ def test_read_main():
 def test_chat_endpoint_exists():
     # Just checking if the route exists, not calling HF API
     response = client.post("/api/chat/", json={"message": "hello"})
-    # It might return 500 because of missing HF_API_KEY, but it should be a known route
+    # It might return 500 because of missing HUGGINGFACE_API_KEY, but it should be a known route
     assert response.status_code in [200, 500]

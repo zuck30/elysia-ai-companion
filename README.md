@@ -62,7 +62,7 @@ cd elysia
 Create a .env file in the root directory:
 
 ```env
-HF_API_KEY=your_hugging_face_token_here
+HUGGINGFACE_API_KEY=your_hugging_face_token_here
 
 ```
 

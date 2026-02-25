@@ -22,36 +22,39 @@ class ChatWebSocketHandler:
         await self.connect(websocket)
         try:
             while True:
-                # Wait for message from frontend
                 data = await websocket.receive_text()
                 message = json.loads(data)
                 
                 if message.get("type") == "chat":
                     user_text = message.get("text", "")
                     
-                    # 1. Get AI Response from Hugging Face
-                    # We wrap this in a try/except so the websocket doesn't die if the API fails
+                    # Signal frontend to show typing animation
+                    await websocket.send_json({"type": "processing_start"})
+
                     try:
+                        # Call the LLM
                         response_text = await hf_client.chat_completion([{"role": "user", "content": user_text}])
                         
-                        # 2. Detect emotion of the AI's response
+                        # Fallback for the 404 error we saw in your logs
+                        if "Error_404" in response_text:
+                            response_text = "I'm having a bit of trouble reaching my memory banks. Let's try again in a second."
+
                         emotion = "neutral"
                         try:
                             emotion = await emotion_engine.analyze_text_emotion(response_text)
-                        except Exception as e:
-                            print(f"Emotion Engine Error: {e}")
+                        except:
+                            pass
 
-                        # 3. Send response back to frontend
                         await websocket.send_json({
                             "type": "chat_response",
                             "text": response_text,
                             "emotion": emotion
                         })
-                    except Exception as hf_err:
-                        print(f"HF Client Error: {hf_err}")
+                    except Exception as e:
+                        print(f"HF Error: {e}")
                         await websocket.send_json({
                             "type": "error",
-                            "text": "I'm having trouble connecting to my brain right now."
+                            "text": "My connection is a bit flickery right now."
                         })
                 
                 elif message.get("type") == "heartbeat":
@@ -60,12 +63,12 @@ class ChatWebSocketHandler:
         except WebSocketDisconnect:
             self.disconnect(websocket)
         except Exception as e:
-            print(f"Unexpected WebSocket Error: {e}")
+            print(f"WS Error: {e}")
             self.disconnect(websocket)
 
-# We name the instance differently than the filename to avoid import confusion
+# Create the instance
 handler_instance = ChatWebSocketHandler()
 
-# This is the function main.py is calling: chat_ws.handle_websocket
+# THIS IS THE FUNCTION main.py IS LOOKING FOR
 async def handle_websocket(websocket: WebSocket):
     await handler_instance.handle_websocket(websocket)
