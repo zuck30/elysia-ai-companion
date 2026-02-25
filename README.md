@@ -1,6 +1,6 @@
 # Elysia.
 
-![Elysia Banner](https://capsule-render.vercel.app/api?type=venom&height=200&color=0:0f2027,100:203a43,30:2c5364&text=%20Elysia&textBg=false&desc=(AI+That+Sees+%26+Feels)&descAlign=79&fontAlign=50&descAlignY=70&fontColor=f7f5f5)
+![Elysia Banner](https://w.wallhaven.cc/full/j3/wallhaven-j3zj1w.png)
 
 <p align="center">Elysia isn't just an assistant, she's a presence. Built for those who value both high-end design and neural performance, she brings a human touch to artificial intelligence. No sidebars, no clutter—just one immersive screen where classical beauty meets the edge of what's possible.</p>
 
