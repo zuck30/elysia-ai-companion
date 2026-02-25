@@ -7,16 +7,16 @@ logger = logging.getLogger(__name__)
 
 class TTSEngine:
     def __init__(self):
-        # Updated to a 2026-stable voice name
+        # I'm using a specific voice here, If you fork you can change it to any voice supported by edge-tts. 
+        # Check the documentation for available voices. --- IGNORE ---
         self.voice = "en-US-AvaNeural" 
         self.output_dir = "temp_audio"
         
-        # Ensure the directory exists on your MacBook
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
 
     async def generate_audio(self, text: str):
-        # Generate a unique path inside the temp folder
+        # This Generates a unique path inside the temp folder
         file_name = f"{uuid.uuid4()}.mp3"
         output_path = os.path.join(self.output_dir, file_name)
         
