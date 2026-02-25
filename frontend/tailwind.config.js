@@ -15,7 +15,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        avenir: ['Avenir', 'system-ui', 'sans-serif'],
+        avenir: ['Avenir', 'Inter', 'system-ui', 'sans-serif'],
       },
     },
   },
