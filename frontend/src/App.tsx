@@ -167,7 +167,7 @@ const App: React.FC = () => {
       </div>
 
       {/* Main Content Area - Floating Overlay */}
-      <main className="flex-1 relative z-10 flex flex-col items-center justify-end">
+      <main className="fixed inset-0 z-10 flex flex-col overflow-hidden">
         {/* Invisible Camera Feed */}
         <CameraFeed
           isActive={cameraActive}
@@ -194,19 +194,17 @@ const App: React.FC = () => {
           )}
         </AnimatePresence>
 
-        <div className="w-full h-full flex flex-col">
-          <ChatInterface 
-            messages={messages} 
-            onSendMessage={sendMessage} 
-            isTyping={isTyping}
-            isListening={isListening}
-            setIsListening={handleToggleListening}
-            isSpeaking={isSpeaking}
-            onVoiceInput={handleVoiceInput}
-            toggleCamera={() => dispatch(setCameraActive(!cameraActive))}
-            isCameraActive={cameraActive}
-          />
-        </div>
+        <ChatInterface
+          messages={messages}
+          onSendMessage={sendMessage}
+          isTyping={isTyping}
+          isListening={isListening}
+          setIsListening={handleToggleListening}
+          isSpeaking={isSpeaking}
+          onVoiceInput={handleVoiceInput}
+          toggleCamera={() => dispatch(setCameraActive(!cameraActive))}
+          isCameraActive={cameraActive}
+        />
       </main>
     </div>
   );
