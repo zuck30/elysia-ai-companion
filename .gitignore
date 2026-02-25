@@ -1,4 +1,3 @@
-.DS_Store
 frontend/node_modules
 frontend/build
 backend/node_modules
@@ -11,5 +10,20 @@ build/
 *.env
 *.DS_Store
 *.pem
-__pycache__/
 *.pyc
+
+# AI/Audio Temp Files
+backend/temp_audio/
+backend/*.mp3
+temp_*.mp3
+
+# Environment & Secrets
+__pycache__/
+*.py[cod]
+
+# macOS System Files
+.DS_Store
+
+# Large model files
+*.bin
+*.pt
