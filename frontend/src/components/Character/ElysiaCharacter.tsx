@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 interface ElysiaCharacterProps {
   emotion: string;
   isSpeaking: boolean;
+  isListening?: boolean;
 }
 
 const emotionStyles: Record<string, any> = {
@@ -15,7 +16,7 @@ const emotionStyles: Record<string, any> = {
   curious: { color: '#98FB98', glow: 'rgba(152, 251, 152, 0.5)' },
 };
 
-const ElysiaCharacter: React.FC<ElysiaCharacterProps> = ({ emotion, isSpeaking }) => {
+const ElysiaCharacter: React.FC<ElysiaCharacterProps> = ({ emotion, isSpeaking, isListening }) => {
   const style = emotionStyles[emotion] || emotionStyles.neutral;
   const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
 
@@ -50,16 +51,21 @@ const ElysiaCharacter: React.FC<ElysiaCharacterProps> = ({ emotion, isSpeaking }
       <motion.div
         animate={{
           x: mousePos.x,
-          y: mousePos.y + (isSpeaking ? -10 : 0),
-          rotateX: -mousePos.y * 0.5,
+          y: mousePos.y + (isSpeaking ? -10 : 0) + (isListening ? 10 : 0),
+          rotateX: isListening ? 15 : -mousePos.y * 0.5,
           rotateY: mousePos.x * 0.5,
-          scale: isSpeaking ? [1, 1.02, 1] : [1, 1.01, 1],
+          rotateZ: isListening ? 5 : 0,
+          scale: isSpeaking ? [1, 1.05, 1] : [1, 1.01, 1],
         }}
         transition={{
           type: 'spring',
-          stiffness: 50,
+          stiffness: isListening ? 100 : 50,
           damping: 20,
-          scale: { repeat: Infinity, duration: 2, ease: "easeInOut" }
+          scale: {
+            repeat: Infinity,
+            duration: isSpeaking ? 0.4 : 3,
+            ease: "easeInOut"
+          }
         }}
         className="relative z-10"
       >
@@ -103,12 +109,17 @@ const ElysiaCharacter: React.FC<ElysiaCharacterProps> = ({ emotion, isSpeaking }
               fill={style.color}
               opacity="0.6"
               animate={{
-                scale: isSpeaking ? [1, 1.1, 1] : [1, 1.02, 1],
+                scale: isSpeaking ? [1, 1.15, 1] : [1, 1.02, 1],
+                y: [0, -5, 0], // Breathe effect
                 d: isSpeaking
                   ? "M 100, 45 C 145, 45 155, 75 155, 100 C 155, 125 145, 155 100, 155 C 55, 155 45, 125 45, 100 C 45, 75 55, 45 100, 45 Z"
                   : "M 100, 50 C 135, 50 150, 75 150, 100 C 150, 125 135, 150 100, 150 C 65, 150 50, 125 50, 100 C 50, 75 65, 50 100, 50 Z"
               }}
-              transition={{ duration: 0.8, repeat: isSpeaking ? Infinity : 0 }}
+              transition={{
+                duration: isSpeaking ? 0.4 : 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
             />
 
             {/* Core */}
@@ -133,12 +144,14 @@ const ElysiaCharacter: React.FC<ElysiaCharacterProps> = ({ emotion, isSpeaking }
               x: mousePos.x * 0.2,
             }}
           >
+            {/* Reaction Layer: Smile/Wave (Represented by eye changes/vibration) */}
             <motion.circle
               cx="85" cy="95" r="4"
               fill="white"
               className="shadow-xl"
               animate={{
-                scaleY: emotion === 'sad' ? 0.2 : [1, 1, 0.1, 1, 1],
+                scaleY: emotion === 'sad' ? 0.2 : (emotion === 'happy' || emotion === 'loving' ? [0.6, 0.6, 0.6] : [1, 1, 0.1, 1, 1]),
+                y: emotion === 'happy' ? -2 : 0,
                 opacity: [0.8, 1, 0.8]
               }}
               transition={{
@@ -150,7 +163,8 @@ const ElysiaCharacter: React.FC<ElysiaCharacterProps> = ({ emotion, isSpeaking }
               cx="115" cy="95" r="4"
               fill="white"
               animate={{
-                scaleY: emotion === 'sad' ? 0.2 : [1, 1, 0.1, 1, 1],
+                scaleY: emotion === 'sad' ? 0.2 : (emotion === 'happy' || emotion === 'loving' ? [0.6, 0.6, 0.6] : [1, 1, 0.1, 1, 1]),
+                y: emotion === 'happy' ? -2 : 0,
                 opacity: [0.8, 1, 0.8]
               }}
               transition={{

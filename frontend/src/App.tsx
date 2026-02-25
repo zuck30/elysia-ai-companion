@@ -14,7 +14,6 @@ import ElysiaCharacter from './components/Character/ElysiaCharacter';
 import ChatInterface from './components/Chat/ChatInterface';
 import CameraFeed from './components/Camera/CameraFeed';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, History, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import { useVoiceRecorder } from './hooks/useVoiceRecorder';
 
@@ -25,6 +24,22 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const { messages, emotion, isSpeaking, isListening, isTyping, cameraActive } = useSelector((state: RootState) => state.elysia);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+
+  const handleSpeak = async (text: string) => {
+    try {
+      const response = await axios.get(`${API_BASE}/api/chat/tts`, {
+        params: { text },
+        responseType: 'blob'
+      });
+      const url = URL.createObjectURL(response.data);
+      const audio = new Audio(url);
+      dispatch(setSpeaking(true));
+      audio.onended = () => dispatch(setSpeaking(false));
+      audio.play();
+    } catch (err) {
+      console.error("TTS failed", err);
+    }
+  };
 
   const handleVoiceInput = async (audioBlob: Blob) => {
     const formData = new FormData();
@@ -58,14 +73,14 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const ws = new WebSocket(`${WS_BASE}/ws/chat`);
-    
+
     ws.onmessage = async (event) => {
       const data = JSON.parse(event.data);
       if (data.type === 'chat_response') {
         dispatch(setTyping(false));
         dispatch(addMessage({ role: 'elysia', content: data.text }));
         dispatch(setEmotion(data.emotion));
-        
+
         // Handle TTS
         handleSpeak(data.text);
       }
@@ -74,22 +89,6 @@ const App: React.FC = () => {
     setSocket(ws);
     return () => ws.close();
   }, [dispatch]);
-
-  const handleSpeak = async (text: string) => {
-    try {
-      const response = await axios.get(`${API_BASE}/api/chat/tts`, {
-        params: { text },
-        responseType: 'blob'
-      });
-      const url = URL.createObjectURL(response.data);
-      const audio = new Audio(url);
-      dispatch(setSpeaking(true));
-      audio.onended = () => dispatch(setSpeaking(false));
-      audio.play();
-    } catch (err) {
-      console.error("TTS failed", err);
-    }
-  };
 
   const sendMessage = (text: string) => {
     dispatch(addMessage({ role: 'user', content: text }));
@@ -133,22 +132,40 @@ const App: React.FC = () => {
       {/* Character Visualization - Central Focus / Background */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
         <div className="w-full h-full max-w-4xl opacity-60 transition-opacity duration-700">
-          <ElysiaCharacter emotion={emotion} isSpeaking={isSpeaking} />
+          <ElysiaCharacter
+            emotion={emotion}
+            isSpeaking={isSpeaking}
+            isListening={isListening || isTyping}
+          />
         </div>
       </div>
 
       {/* Main Content Area - Floating Overlay */}
       <main className="flex-1 relative z-10 flex flex-col items-center justify-end">
-        {/* Floating Camera View (if active) */}
-        {cameraActive && (
-          <div className="absolute top-8 right-8 z-20">
-            <CameraFeed
-              isActive={cameraActive}
-              onFrame={handleFrame}
-              toggleCamera={() => dispatch(setCameraActive(!cameraActive))}
-            />
-          </div>
-        )}
+        {/* Invisible Camera Feed */}
+        <CameraFeed
+          isActive={cameraActive}
+          onFrame={handleFrame}
+          isHidden={true}
+        />
+
+        {/* Vision Status Indicator */}
+        <AnimatePresence>
+          {cameraActive && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              className="absolute top-6 right-6 z-50 flex items-center space-x-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10"
+            >
+              <div className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Vision Active</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="w-full h-full flex flex-col">
           <ChatInterface 
