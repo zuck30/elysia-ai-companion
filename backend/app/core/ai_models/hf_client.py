@@ -37,7 +37,7 @@ class HFClient:
                     result = response.json()
                     return result['choices'][0]['message']['content'].strip()
                 
-                # If Nemo fails, this is the absolute most popular open chat model
+                # If Nemo fails, this is the absolute most popular open chat model last i checked, so it's a good candidate for a fallback. It's also smaller and faster, which is why I can use it
                 # as a 100% reliable fallback.
                 if response.status_code != 200:
                     logger.warning(f"Nemo failed ({response.status_code}), trying Llama fallback...")
