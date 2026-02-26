@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: elysia-backend
+    env: docker
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    plan: free
+    envVars:
+      - key: HUGGINGFACE_API_KEY
+        sync: false
+      - key: PORT
+        value: 8000
+      - key: ALLOWED_ORIGINS
+        value: "*"
+    healthCheckPath: /
