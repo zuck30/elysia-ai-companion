@@ -88,6 +88,26 @@
     ```
     The frontend application will open at `http://localhost:3000`.
 
+### Deployment
+
+#### 🚀 Backend (Render.com)
+1.  **Create a New Web Service**: Choose the "Docker" runtime.
+2.  **Root Directory**: Set this to `backend`.
+3.  **Environment Variables**:
+    - `HUGGINGFACE_API_KEY`: Your Hugging Face token.
+    - `ALLOWED_ORIGINS`: Set to your Netlify URL (e.g., `https://your-site.netlify.app`) or `*` for all.
+    - `PORT`: 8000 (optional, Render usually handles this).
+4.  **Blueprint**: Alternatively, use the provided `render.yaml` file for automatic setup.
+
+#### 🌐 Frontend (Netlify.com)
+1.  **Create a New Site**: Connect your repository.
+2.  **Base Directory**: `frontend`
+3.  **Build Command**: `npm run build`
+4.  **Publish Directory**: `build`
+5.  **Environment Variables**:
+    - `REACT_APP_API_URL`: Your backend URL (e.g., `https://elysia-backend.onrender.com`).
+    - `REACT_APP_WS_URL`: Your backend WebSocket URL (e.g., `wss://elysia-backend.onrender.com`).
+
 ### Design Philosophy
 
 I built Elysia on the principle of **Active Presence**. I believe software should feel alive. Her interface is designed to disappear into the background, leaving only a seamless connection between you and a machine that finally feels a bit more human.

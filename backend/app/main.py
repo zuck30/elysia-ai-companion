@@ -11,10 +11,17 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Elysia-AI Companion API")
 
+@app.on_event("startup")
+async def startup_event():
+    if not os.getenv("HUGGINGFACE_API_KEY"):
+        logger.warning("HUGGINGFACE_API_KEY is not set! AI features will not work.")
+
 # Configure CORS => Muhimu kwa ajili ya mawasiliano na React frontend
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
