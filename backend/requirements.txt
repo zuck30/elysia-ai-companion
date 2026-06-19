@@ -15,9 +15,12 @@ aiohttp==3.9.3
 
 # AI & Machine Learning
 # 2.17.0 is correct for Python 3.12 on Mac
+# AI & Machine Learning
 tensorflow==2.17.0
 tensorflow-metal; sys_platform == 'darwin'
-torch==2.2.0
+torch==2.2.2
+torchvision==0.17.2
+facenet-pytorch==2.6.0
 huggingface-hub
 
 # Vision & Emotion
