@@ -99,12 +99,11 @@ Malaika isn't just a companion, she's a presence. Inspired by the minimalist ele
 
 1.  Open your web browser and navigate to `http://localhost:3000`.
 2.  Interact with Malaika through voice or text.
-3.  **Clap your hands** to trigger a Jarvis-style greeting and start voice conversation!
-4.  Experience a living, breathing AI companion.
+3.  **Clap your hands** to trigger and start voice conversation!
 
 ## macOS Permissions & Setup
 
-To allow Malaika to control your MacBook Pro (M3) or other macOS laptops, you must grant the following permissions:
+To allow Malaika to control your macOS laptops, you must grant the following permissions:
 
 1.  **Accessibility**: Required for controlling system volume, brightness, and window management via `osascript` and `Quartz`.
     - Go to `System Settings > Privacy & Security > Accessibility`.
