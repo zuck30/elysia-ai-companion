@@ -32,21 +32,21 @@ Malaika isn't just a companion, she's a presence. Inspired by the minimalist ele
 
 <h2> Quick Start</h2>
 
-### Prerequisites
+# Prerequisites
 
 - Python 3.9+
 - Node.js 18+
 - Docker & Docker Compose
 - Hugging Face API Token
 
-## Project Structure
+# Project Structure
 
 - `frontend/`: Contains the React application with TypeScript and Three.js 3D rendering.
 - `backend/`: Contains the FastAPI backend with ChromaDB memory integration.
 
-## Setup and Installation
+# Setup and Installation
 
-### Backend
+# Backend
 
 1.  Navigate to the `backend` directory:
     ```bash
@@ -65,7 +65,7 @@ Malaika isn't just a companion, she's a presence. Inspired by the minimalist ele
     uvicorn app.main:app --reload --port 8000
     ```
 
-### Frontend
+# Frontend
 
 1.  Navigate to the `frontend` directory:
     ```bash
@@ -80,7 +80,7 @@ Malaika isn't just a companion, she's a presence. Inspired by the minimalist ele
     npm start
     ```
 
-### Docker Setup (Alternative)
+# Docker Setup (Alternative)
 
 1.  Run with Docker Compose:
     ```bash
@@ -88,20 +88,20 @@ Malaika isn't just a companion, she's a presence. Inspired by the minimalist ele
     ```
 
 
-## Features
+# Features
 
 - **Multi-modal Memory**: Integrated with ChromaDB for hybrid semantic/chronological retrieval of conversations.
 - **Proactive Visual Awareness**: Powered by Qwen2.5-VL-7B-Instruct for high-fidelity visual and video context awareness.
 - **Emotional Depth**: Dual-layered emotion engine analyzing facial expressions and message sentiment.
 - **Natural Speech Synthesis**: Edge-TTS with natural prosody and conversational flow.
 
-## Usage
+# Usage
 
 1.  Open your web browser and navigate to `http://localhost:3000`.
 2.  Interact with Malaika through voice or text.
 3.  **Clap your hands** to trigger and start voice conversation!
 
-## macOS Permissions & Setup
+# macOS Permissions & Setup
 
 To allow Malaika to control your macOS laptops, you must grant the following permissions:
 
@@ -117,10 +117,10 @@ To allow Malaika to control your macOS laptops, you must grant the following per
 4.  **Automation**: Ensure the terminal is allowed to control "System Events".
     - Usually prompted on first run; can be managed in `System Settings > Privacy & Security > Automation`.
 
-## License
+# License
 
 This project is licensed under the MIT License.
 
-## Support
+# Support
 
 If you have any questions or issues, please open an issue on GitHub or contact mwalyangashadrack@gmail.com
