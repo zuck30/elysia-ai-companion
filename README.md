@@ -4,10 +4,6 @@
 
 ![Shot](screenshots/shot-1.png)
 
-
-
-![Banner](https://capsule-render.vercel.app/api?type=venom&height=200&color=0:61DAFB,100:8A2BE2&text=Malaika&textBg=false&desc=(AI+Companion)&descAlign=79&fontAlign=50&descAlignY=70&fontColor=f7f5f5)
-
 <p align="center">
 Malaika isn't just a companion, she's a presence. Inspired by the minimalist elegance of "Her" my favorite movie, and the high energy aesthetic of modern social interfaces.
 </p>
