@@ -89,7 +89,7 @@ const App: React.FC = () => {
     }
   }, !isListening && !isSpeaking);
 
-  // Clap detection (Jarvis Mode)
+  // Clap detection
   useClapDetection(() => {
     if (!isListening && !isSpeaking) {
       const greeting = "At your service. How can I help you today?";
